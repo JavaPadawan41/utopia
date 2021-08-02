@@ -13,20 +13,18 @@ import com.ss.utopia.view.View;
 
 public class EmployeeService extends ConsoleMenuService
 {
-	private FlightRepository flightRepo;
-	
-	public EmployeeService(View view, String quitOption) throws ClassNotFoundException, SQLException, IOException
+
+	public EmployeeService(View view) throws ClassNotFoundException, SQLException, IOException
 	{
 		super(view, new GenericMenu("Employee Options:", List.of("See the flights you manage", "Quit to previous")), 
-				quitOption);
+				"2");
 		
 		this.lookup.put(1, () -> this.manageFlights());
-		this.flightRepo = new FlightRepository(ConnectionManager.getConnection(), FlightFactory.getInstance());
 	}
 	
 	protected void manageFlights()
 	{
-		
+		view.displayMessage("You chose to manage flights");
 	}
 	
 }

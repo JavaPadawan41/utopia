@@ -21,6 +21,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Properties;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -66,6 +67,13 @@ public class TestAirportRepository
 		
 	}
 	
+	@AfterClass
+	public static void tearDownClass() throws SQLException
+	{
+		con.rollback();
+		con.close();	
+	}
+	
 	@Test
 	public void testInsert() throws SQLException
 	{
@@ -101,7 +109,7 @@ public class TestAirportRepository
 			
 			//Test that only one row inserted and that max capacity is correct
 			
-			ps = con.prepareStatement("SELECT CITY FROM airport WHERE iata_id = 'TST'");
+			ps = con.prepareStatement("SELECT CITY FROM airport WHERE iata_id = ?");
 			ps.setString(1, newEntity.getIataId());
 			rs = ps.executeQuery();
 			
@@ -167,10 +175,11 @@ public class TestAirportRepository
 		a.setIataId("BFF");
 
 		assertDoesNotThrow(() -> {repo.delete(a);});
-		ps = con.prepareStatement("SELECT COUNT (*) FROM route WHERE route.origin_id  = ? OR route.destination_id = ?");
+		ps = con.prepareStatement("SELECT COUNT(*) FROM route WHERE route.origin_id  = ? OR route.destination_id = ?");
 		ps.setObject(1, a.getIataId());
 		ps.setObject(2, a.getIataId());
 		rs = ps.executeQuery();
+		assertTrue(rs.next());
 		assertEquals(rs.getInt(1), 0);
 		con.rollback();
 	}

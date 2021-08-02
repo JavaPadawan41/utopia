@@ -1,5 +1,6 @@
 package com.ss.utopia.menu;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,6 +20,11 @@ public class GenericMenu implements Menu
 		this.title = title;
 		this.options = IntStream.rangeClosed(1, options.size()).boxed().map(i -> new Choice(options.get(i - 1), i)).collect(Collectors.toList());
 
+	}
+	
+	public GenericMenu(String title)
+	{
+		this(title, new ArrayList<Object>());
 	}
 
 	@Override

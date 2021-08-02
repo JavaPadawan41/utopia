@@ -7,7 +7,6 @@ import com.ss.utopia.view.View;
 
 public class ConsoleMenuService extends ConsoleService
 {
-
 	protected Menu menu;
 	protected String quitOption;
 	
@@ -29,11 +28,13 @@ public class ConsoleMenuService extends ConsoleService
 		Integer parsed;
 		Service next;
 		
-		this.view.updateMenu(this.menu);
+		
 		
 		while (!quitToPrevious)
 		{
+			this.view.updateMenu(this.menu);
 			this.view.refresh();
+			
 			input = this.view.getUserInput();
 			
 			if (validate(input))

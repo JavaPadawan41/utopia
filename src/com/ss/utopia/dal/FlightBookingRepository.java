@@ -13,10 +13,10 @@ import com.ss.utopia.model. FlightBooking;
 
 public class FlightBookingRepository extends RepositoryBase< FlightBooking>
 {
-	private static final String selectAllQuery = "SELECT t0.flight_id, t0.booking_id FROM flight_bookings t0 ";
-	private static final String getQuery = selectAllQuery + " WHERE flight_bookings.booking_id = ?";
+	private static final String selectAllQuery = "SELECT flight_id, booking_id FROM flight_bookings ";
+	private static final String getQuery = selectAllQuery + " WHERE booking_id = ?";
 	private static final String insertQuery = "INSERT INTO flight_bookings (flight_id, booking_id) VALUES (?, ?)";
-	private static final String updateQuery = "UPDATE flight_bookings SET flight_id = ?, booking_id = ? WHERE flight_id = ? AND booking_id = ?";
+	private static final String updateQuery = "UPDATE flight_bookings SET flight_id = ? WHERE booking_id = ?";
 	private static final String deleteQuery = "DELETE FROM flight_bookings WHERE flight_id = ? AND booking_id = ?";
 	
 	/***
@@ -59,7 +59,7 @@ public class FlightBookingRepository extends RepositoryBase< FlightBooking>
 	@Override
 	public Integer update(FlightBooking entity) throws SQLException, NullPointerException
 	{
-		throw new UnsupportedOperationException();	
+		return super.upsert(updateQuery, 0, entity.getFlight().getId(), entity.getBooking().getId());
 	}
 	
 	public Integer update(FlightBooking oldFb, FlightBooking newFb) throws NullPointerException, SQLException

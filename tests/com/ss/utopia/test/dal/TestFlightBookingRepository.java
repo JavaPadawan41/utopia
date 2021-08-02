@@ -17,6 +17,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import com.ss.dal.factory.FlightBookingFactory;
@@ -62,6 +64,13 @@ public class TestFlightBookingRepository
 		
 		repo = new FlightBookingRepository(con, factory);
 		
+	}
+	
+	@AfterClass
+	public static void tearDownClass() throws SQLException
+	{
+		con.rollback();
+		con.close();	
 	}
 	
 	@Test
@@ -146,7 +155,7 @@ public class TestFlightBookingRepository
 		assertDoesNotThrow(() -> 
 		{
 			FlightBooking b = repo.get(1);
-			assertEquals(b.getFlight(), 181);
+			assertEquals(b.getFlight().getId(), 181);
 		});
 		
 		//Test retrieving an invalid instance yields null

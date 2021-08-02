@@ -17,6 +17,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import com.ss.dal.factory.BookingFactory;
@@ -60,6 +62,13 @@ public class TestBookingRepository
 		
 		repo = new BookingRepository(con, factory);
 		
+	}
+	
+	@AfterClass
+	public static void tearDownClass() throws SQLException
+	{
+		con.rollback();
+		con.close();	
 	}
 	
 	@Test
@@ -119,7 +128,7 @@ public class TestBookingRepository
 
 		
 		//Test that deletion of non-existent entity fails
-		assertThrows(NullPointerException.class, () -> repo.delete(b));
+		assertEquals(0, repo.delete(b).intValue());
 		con.rollback();
 
 		//Test that deletion of an existing entity succeeds

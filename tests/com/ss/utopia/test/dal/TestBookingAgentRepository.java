@@ -21,6 +21,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Properties;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -68,6 +69,13 @@ public class TestBookingAgentRepository
 		
 	}
 	
+	@AfterClass
+	public static void tearDownClass() throws SQLException
+	{
+		con.rollback();
+		con.close();	
+	}
+	
 	@Test
 	public void testInsert() throws SQLException
 	{
@@ -82,8 +90,8 @@ public class TestBookingAgentRepository
 		entity.setAgent(new User());
 		entity.setBooking(new Booking());
 		entity.getAgent().setId(1);
-		entity.getBooking().setId(1);
-		assertThrows(SQLException.class, () -> repo.insert(entity));
+		entity.getBooking().setId(2);
+		assertThrows(SQLException.class, () -> {repo.insert(entity);});
 		con.rollback();
 		
 		//Test that insertion of invalid user fails
@@ -134,7 +142,7 @@ public class TestBookingAgentRepository
 		ResultSet rs;
 		
 		//Test that deletion of non-existent entity fails
-		assertThrows(NullPointerException.class, () -> repo.delete(a));
+		assertEquals(0, repo.delete(a).intValue());
 		con.rollback();
 
 		

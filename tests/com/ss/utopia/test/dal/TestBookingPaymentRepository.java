@@ -13,6 +13,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import com.ss.dal.factory.BookingPaymentFactory;
@@ -56,6 +58,13 @@ public class TestBookingPaymentRepository
 		
 		repo = new BookingPaymentRepository(con, factory);
 		
+	}
+	
+	@AfterClass
+	public static void tearDownClass() throws SQLException
+	{
+		con.rollback();
+		con.close();	
 	}
 	
 	@Test
@@ -132,7 +141,7 @@ public class TestBookingPaymentRepository
 
 		
 		//Test that deletion of null entity fails
-		assertThrows(NullPointerException.class, () -> repo.delete(a));
+		assertEquals(0, repo.delete(a).intValue());
 		con.rollback();
 		
 		//Test that deletion of a non-existent entity fails

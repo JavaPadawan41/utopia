@@ -14,6 +14,7 @@ import com.ss.utopia.model.User;
 
 public class UserRepository extends RepositoryBase<User>
 {
+	
 	private static final String selectAllQuery = "SELECT `user`.id, `user`.role_id, `user`.given_name, `user`.family_name, `user`.username, `user`.password, `user`.email, `user`.phone " + 
 												 "FROM `user` " + 
 												 "JOIN user_role ON `user`.role_id = user_role.id ";

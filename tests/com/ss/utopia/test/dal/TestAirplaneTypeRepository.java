@@ -21,6 +21,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Properties;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -63,6 +64,13 @@ public class TestAirplaneTypeRepository
 		
 		repo = new AirplaneTypeRepository(con, factory);
 		
+	}
+	
+	@AfterClass
+	public static void tearDownClass() throws SQLException
+	{
+		con.rollback();
+		con.close();	
 	}
 	
 	@Test

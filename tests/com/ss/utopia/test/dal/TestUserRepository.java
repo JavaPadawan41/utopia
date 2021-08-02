@@ -20,6 +20,8 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Properties;
+
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import com.ss.dal.factory.UserFactory;
@@ -63,6 +65,13 @@ public class TestUserRepository
 		
 		repo = new UserRepository(con, factory);
 		
+	}
+	
+	@AfterClass
+	public static void tearDownClass() throws SQLException
+	{
+		con.rollback();
+		con.close();	
 	}
 	
 	@Test

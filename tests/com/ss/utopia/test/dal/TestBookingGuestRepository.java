@@ -14,8 +14,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Properties;
+
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import com.ss.dal.factory.BookingGuestFactory;
@@ -61,6 +64,13 @@ public class TestBookingGuestRepository
 		
 	}
 	
+	@AfterClass
+	public static void tearDownClass() throws SQLException
+	{
+		con.rollback();
+		con.close();	
+	}
+	
 	@Test
 	public void testInsert() throws SQLException
 	{
@@ -68,7 +78,7 @@ public class TestBookingGuestRepository
 		BookingGuest entity = factory.createNew();
 		
 		//Test that insertion of null pK fails
-		assertThrows(NullPointerException.class, () -> repo.insert(entity));
+		assertThrows(SQLIntegrityConstraintViolationException.class, () -> repo.insert(entity));
 		con.rollback();
 		
 		//Test that insertion of duplicate PK fails
@@ -107,7 +117,7 @@ public class TestBookingGuestRepository
 		ResultSet rs;
 		
 		//Test that cannot perform  update with a new (keyless) entity
-		assertThrows(NullPointerException.class, () -> repo.update(newEntity));
+		assertEquals(0, repo.update(newEntity).intValue());
 		con.rollback();
 		
 		//Test that update with invalid PK does nothing
@@ -139,7 +149,7 @@ public class TestBookingGuestRepository
 		BookingGuest a = factory.createNew();
 		
 		//Test that deletion of non-existent PK entity fails
-		assertThrows(NullPointerException.class, () -> repo.delete(a));
+		assertEquals(0, repo.delete(a).intValue());
 		con.rollback();
 		
 		//Test that deletion of entity with invalid PK has no effect

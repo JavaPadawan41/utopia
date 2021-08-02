@@ -18,9 +18,12 @@ import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Properties;
+
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import com.ss.dal.factory.FlightFactory;
+import com.ss.dal.factory.UserFactory;
 import com.ss.utopia.dal.FlightRepository;
 import com.ss.utopia.model.Booking;
 import com.ss.utopia.model.Flight;
@@ -61,6 +64,13 @@ public class TestFlightRepository
 		
 		repo = new FlightRepository(con, factory);
 		
+	}
+	
+	@AfterClass
+	public static void tearDownClass() throws SQLException
+	{
+		con.rollback();
+		con.close();	
 	}
 	
 	@Test
@@ -186,6 +196,7 @@ public class TestFlightRepository
 		
 	}
 	
+	@Test
 	public void testGetAll() throws SQLException
 	{
 		//Test that get retrieves all members of the underlying table
@@ -194,7 +205,7 @@ public class TestFlightRepository
 			assertDoesNotThrow(() -> 
 			{
 				List<Flight> apt = repo.getAll();
-				assertEquals(apt.size(), 9);
+				assertEquals(apt.size(), 10);
 			}
 			);
 		}
@@ -202,6 +213,25 @@ public class TestFlightRepository
 		{
 			con.rollback();
 		}
+	}
+	
+	@Test
+	public void testGetByUser() throws SQLException
+	{
+		User u = UserFactory.getInstance().createNew();
+		u.setId(2);
+		List<Flight> managedFlights;
+		
+		//Test that all managed flights for valid user returned
+		managedFlights = repo.getManagedFlights(u);
+		
+		assertEquals(managedFlights.size(), 3);
+		
+		//Test that no results returned for invalid suer
+		u.setId(4);
+		managedFlights = repo.getManagedFlights(u);
+		
+		assertEquals(managedFlights.size(), 0);
 		
 	}
 }

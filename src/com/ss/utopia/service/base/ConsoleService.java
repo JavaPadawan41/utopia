@@ -1,6 +1,7 @@
 package com.ss.utopia.service.base;
 
 
+
 import com.ss.utopia.service.ServiceLookup;
 import com.ss.utopia.view.View;
 
@@ -17,7 +18,7 @@ public abstract class ConsoleService extends ServiceBase
 		
 		
 		this.view = view;
-		
+		this.lookup = new ServiceLookup();
 	}
 
 	@Override
